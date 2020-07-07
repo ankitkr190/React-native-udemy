@@ -26,7 +26,13 @@ mongoose.connection.on("error", (err) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("welcome to node js");
+  Employee.find({})
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/send-data", (req, res) => {
@@ -42,7 +48,36 @@ app.post("/send-data", (req, res) => {
     .save()
     .then((data) => {
       console.log(data);
-      res.send("success");
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/delete", (req, res) => {
+  Employee.findByIdAndRemove(req.body.id)
+    .then((data) => {
+      console.log(data);
+      res.send(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/update", (req, res) => {
+  Employee.findByIdAndUpdate(req.body.id, {
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    picture: req.body.picture,
+    salary: req.body.salary,
+    position: req.body.position,
+  })
+    .then((data) => {
+      console.log(data);
+      res.send(data);
     })
     .catch((err) => {
       console.log(err);
@@ -52,3 +87,12 @@ app.post("/send-data", (req, res) => {
 app.listen(3000, () => {
   console.log("server running");
 });
+
+// {
+//   "name": "ankit",
+//   "email":"abc@abc.com",
+//   "phone":"123456",
+//   "picture":"some url",
+//   "salary":"10 lpa",
+//   "position":"web dev"
+// }
