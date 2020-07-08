@@ -5,7 +5,7 @@ import { Title, Card, Button } from "react-native-paper";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
 const Profile = (props) => {
   const {
-    id,
+    _id,
     name,
     picture,
     phone,

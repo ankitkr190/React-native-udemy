@@ -1,111 +1,27 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Card, FAB } from "react-native-paper";
 
 const Home = ({ navigation }) => {
-  const data = [
-    {
-      id: 1,
-      name: "Ankit",
-      email: "ankit@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "web dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 2,
-      name: "Ramesh",
-      email: "ramesh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "app dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 3,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 4,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 5,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 6,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 7,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 8,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 9,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-      id: 10,
-      name: "Suresh",
-      email: "suresh@abc.com",
-      salary: "5lpa",
-      phone: "123",
-      position: "ml dev",
-      picture:
-        "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("http://c9c93cdd1e81.ngrok.io/")
+      .then((res) => res.json())
+      .then((results) => {
+        setData(results);
+        console.log("Home -> results", results);
 
+        setLoading(false);
+      });
+  }, []);
   const renderList = (item) => {
     return (
       <Card
@@ -116,8 +32,7 @@ const Home = ({ navigation }) => {
           <Image
             style={{ width: 60, height: 60, borderRadius: 50 }}
             source={{
-              uri:
-                "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+              uri: item.picture,
             }}
           />
 
@@ -130,14 +45,18 @@ const Home = ({ navigation }) => {
     );
   };
   return (
-    <View>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => {
-          return renderList(item);
-        }}
-        keyExtractor={(item) => `${item.id}`}
-      />
+    <View style={{ flex: 1 }}>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={({ item }) => {
+            return renderList(item);
+          }}
+          keyExtractor={(item) => `${item._id}`}
+        />
+      )}
       <FAB
         onPress={() => navigation.navigate("Create")}
         style={styles.fab}
