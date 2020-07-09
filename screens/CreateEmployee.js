@@ -22,7 +22,7 @@ const CreateEmployee = ({ navigation }) => {
   const [modal, setModal] = useState(false);
 
   const submitData = () => {
-    fetch("http://c9c93cdd1e81.ngrok.io/send-data", {
+    fetch("http://e951b8f9079b.ngrok.io/send-data", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -40,6 +40,9 @@ const CreateEmployee = ({ navigation }) => {
       .then((data) => {
         Alert.alert(`${data.name} is saved successfully`);
         navigation.navigate("Home");
+      })
+      .catch((err) => {
+        Alert.alert("something went wrong");
       });
   };
 
@@ -102,6 +105,9 @@ const CreateEmployee = ({ navigation }) => {
         console.log(data);
         setPicture(data.url);
         setModal(false);
+      })
+      .catch((err) => {
+        Alert.alert("error while uploading");
       });
   };
 

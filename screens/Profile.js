@@ -15,9 +15,9 @@ const Profile = (props) => {
   } = props.route.params.item;
   const openDial = () => {
     if (Platform.OS === "android") {
-      Linking.openURL("tel:123456");
+      Linking.openURL(`tel:${phone}`);
     } else {
-      Linking.openURL("telprompt:123456");
+      Linking.openURL(`telprompt:${phone}`);
     }
   };
   return (
@@ -47,7 +47,7 @@ const Profile = (props) => {
       <Card
         style={styles.mycard}
         onPress={() => {
-          Linking.openURL("mailto:abc.com");
+          Linking.openURL(`mailto:${email}`);
         }}
       >
         <View style={styles.cardcontent}>
