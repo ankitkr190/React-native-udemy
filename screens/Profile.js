@@ -1,5 +1,13 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Linking, Platform } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Linking,
+  Platform,
+  Alert,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Title, Card, Button } from "react-native-paper";
 import { MaterialIcons, Entypo } from "@expo/vector-icons";
@@ -13,6 +21,26 @@ const Profile = (props) => {
     email,
     position,
   } = props.route.params.item;
+
+  const deleteEmployee = () => {
+    fetch("http://bb2a00a2ca3e.ngrok.io/delete", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: _id,
+      }),
+    })
+      .then((res) => res.json())
+      .then((deletedEmp) => {
+        Alert.alert(`${deletedEmp.name} deleted`);
+        props.navigation.navigate("Home");
+      })
+      .catch((err) => {
+        Alert.alert("something went wrong");
+      });
+  };
   const openDial = () => {
     if (Platform.OS === "android") {
       Linking.openURL(`tel:${phone}`);
@@ -78,7 +106,17 @@ const Profile = (props) => {
           icon="account-edit"
           theme={theme}
           mode="contained"
-          onPress={() => console.log("Pressed")}
+          onPress={() => {
+            props.navigation.navigate("Create", {
+              _id,
+              name,
+              picture,
+              phone,
+              salary,
+              email,
+              position,
+            });
+          }}
         >
           Edit
         </Button>
@@ -86,7 +124,7 @@ const Profile = (props) => {
           icon="delete"
           theme={theme}
           mode="contained"
-          onPress={() => console.log("Pressed")}
+          onPress={() => deleteEmployee()}
         >
           fire employee
         </Button>

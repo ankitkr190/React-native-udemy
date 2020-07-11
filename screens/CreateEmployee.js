@@ -6,23 +6,45 @@ import {
   Modal,
   Alert,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 import * as Permissions from "expo-permissions";
 
-const CreateEmployee = ({ navigation }) => {
-  const [Name, setName] = useState("");
-  const [Phone, setPhone] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Salary, setSalary] = useState("");
-  const [Picture, setPicture] = useState("");
-  const [Position, setPosition] = useState("");
+const CreateEmployee = ({ navigation, route }) => {
+  const getDetails = (type) => {
+    if (route.params) {
+      switch (type) {
+        case "name":
+          return route.params.name;
+        case "phone":
+          return route.params.phone;
+        case "email":
+          return route.params.email;
+        case "salary":
+          return route.params.salary;
+        case "picture":
+          return route.params.picture;
+        case "position":
+          return route.params.position;
+      }
+    }
+    return "";
+  };
+
+  const [Name, setName] = useState(getDetails("name"));
+  const [Phone, setPhone] = useState(getDetails("phone"));
+  const [Email, setEmail] = useState(getDetails("email"));
+  const [Salary, setSalary] = useState(getDetails("salary"));
+  const [Picture, setPicture] = useState(getDetails("picture"));
+  const [Position, setPosition] = useState(getDetails("position"));
   const [modal, setModal] = useState(false);
+  const [enableshift, setenableShift] = useState(false);
 
   const submitData = () => {
-    fetch("http://e951b8f9079b.ngrok.io/send-data", {
+    fetch("http://bb2a00a2ca3e.ngrok.io/send-data", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -39,6 +61,32 @@ const CreateEmployee = ({ navigation }) => {
       .then((res) => res.json())
       .then((data) => {
         Alert.alert(`${data.name} is saved successfully`);
+        navigation.navigate("Home");
+      })
+      .catch((err) => {
+        Alert.alert("something went wrong");
+      });
+  };
+
+  const updateDetails = () => {
+    fetch("http://bb2a00a2ca3e.ngrok.io/update", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: route.params._id,
+        name: Name,
+        email: Email,
+        phone: Phone,
+        salary: Salary,
+        picture: Picture,
+        position: Position,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        Alert.alert(`${data.name} is updated successfully`);
         navigation.navigate("Home");
       })
       .catch((err) => {
@@ -112,12 +160,17 @@ const CreateEmployee = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.root}>
-      <KeyboardAvoidingView>
+    <KeyboardAvoidingView
+      behavior="position"
+      style={styles.root}
+      enabled={enableshift}
+    >
+      <View>
         <TextInput
           label="Name"
           style={styles.inputStyle}
           theme={theme}
+          onFocus={() => setenableShift(false)}
           value={Name}
           mode="outlined"
           onChangeText={(text) => setName(text)}
@@ -126,6 +179,7 @@ const CreateEmployee = ({ navigation }) => {
           label="Email"
           style={styles.inputStyle}
           theme={theme}
+          onFocus={() => setenableShift(false)}
           value={Email}
           mode="outlined"
           onChangeText={(text) => setEmail(text)}
@@ -134,6 +188,7 @@ const CreateEmployee = ({ navigation }) => {
           label="Phone"
           style={styles.inputStyle}
           theme={theme}
+          onFocus={() => setenableShift(false)}
           value={Phone}
           keyboardType="number-pad"
           mode="outlined"
@@ -143,6 +198,7 @@ const CreateEmployee = ({ navigation }) => {
           label="Salary"
           style={styles.inputStyle}
           theme={theme}
+          onFocus={() => setenableShift(true)}
           value={Salary}
           mode="outlined"
           onChangeText={(text) => setSalary(text)}
@@ -151,6 +207,7 @@ const CreateEmployee = ({ navigation }) => {
           label="Position"
           style={styles.inputStyle}
           theme={theme}
+          onFocus={() => setenableShift(true)}
           value={Position}
           mode="outlined"
           onChangeText={(text) => setPosition(text)}
@@ -163,14 +220,25 @@ const CreateEmployee = ({ navigation }) => {
         >
           UPLOAD IMAGE
         </Button>
-        <Button
-          style={styles.inputStyle}
-          icon="content-save"
-          mode="contained"
-          onPress={() => submitData()}
-        >
-          SAVE
-        </Button>
+        {route.params ? (
+          <Button
+            style={styles.inputStyle}
+            icon="content-save"
+            mode="contained"
+            onPress={() => updateDetails()}
+          >
+            Update Details
+          </Button>
+        ) : (
+          <Button
+            style={styles.inputStyle}
+            icon="content-save"
+            mode="contained"
+            onPress={() => submitData()}
+          >
+            SAVE
+          </Button>
+        )}
 
         <Modal
           animationType="slide"
@@ -206,8 +274,8 @@ const CreateEmployee = ({ navigation }) => {
             </View>
           </View>
         </Modal>
-      </KeyboardAvoidingView>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 const theme = {
