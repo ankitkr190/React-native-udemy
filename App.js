@@ -10,6 +10,12 @@ import Profile from "./screens/Profile";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { reducer } from "./reducers/reducer";
+
+const store = createStore(reducer);
+
 const Stack = createStackNavigator();
 
 const myOptions = {
@@ -41,9 +47,11 @@ function App() {
 
 export default () => {
   return (
-    <NavigationContainer>
-      <App />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <App />
+      </NavigationContainer>
+    </Provider>
   );
 };
 
@@ -51,9 +59,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#e0e0e0",
-    // marginTop: Contants.statusBarHeight,
-    //  alignItems: 'center',
-
-    // justifyContent: 'center'
   },
 });
