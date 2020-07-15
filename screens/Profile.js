@@ -23,7 +23,7 @@ const Profile = (props) => {
   } = props.route.params.item;
 
   const deleteEmployee = () => {
-    fetch("http://1cfe2de340bc.ngrok.io/delete", {
+    fetch("http://0ea13a4789d8.ngrok.io/delete", {
       method: "post",
       headers: {
         "Content-Type": "application/json",
